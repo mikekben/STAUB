@@ -47,7 +47,7 @@ namespace STAUB
       unsigned integer_width;
       const std::map<std::string, Value *>& variables;
       expr contents;
-      bool noOverflow = true;
+      static bool forSlot;
 
       //Z3 ''constants'' can be either variables or constants
       inline bool IsVariable() { return contents.is_const() && variables.count(contents.to_string()); }

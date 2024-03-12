@@ -39,8 +39,9 @@ bool HasFlag(int argc, char* argv[], const std::string& flag)
 
 }
 
+bool SMTNode::forSlot = false;
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
   unsigned major, minor, bn, rn;
 
@@ -53,6 +54,7 @@ int main(int argc, char* argv[])
         std::cout << "-s <FILE>               Input .smt2 file\n";
         std::cout << "-o <FILE>               Output .smt2 file\n";
         std::cout << "-t <FILE>               Statistics output file\n";
+        std::cout << "-l                      Set output format compatible with SLOT\n";
         std::cout << "-r <ebits,sbits|aix|aix4>    Real numbers: if integer exponent and significant bits are specified, uses those. If aix, uses abstract interpretation. If aix4, uses standard 16/32/64/128 width domain.\n";
         std::cout << "-i <N|aix|aix2>              Integers: if integer N is given uses this fixed withd; if aix, uses abstract interpretation, if aix2, uses abstract interpretation with domain of powers of 2.\n";
         std::cout << "Either real number of integer must be specified.\n";
@@ -110,6 +112,7 @@ int main(int argc, char* argv[])
     }
     char * inputFilename = GetFlag(argc, argv, "-s");
 
+    SMTNode::forSlot = HasFlag(argc, argv, "-l");
 
     std::vector<std::string> stats;
     stats.push_back(inputFilename);

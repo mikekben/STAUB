@@ -1,0 +1,8 @@
+(declare-fun x () Int)
+(declare-fun y () Int)
+(declare-fun z () Int)
+(assert (and (< x 2047) (> x (- 2048))))
+(assert (and (< y 2047) (> y (- 2048))))
+(assert (and (< z 2047) (> z (- 2048))))
+(assert (= (+ (* x x x) (* y y y) (* z z z)) 855))
+(check-sat)

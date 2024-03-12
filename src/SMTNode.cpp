@@ -384,7 +384,7 @@ namespace STAUB
             expr e = scx.bv_val(str.c_str(),width);
             if (isNegative)
             {
-                if (noOverflow)
+                if (!forSlot)
                 {
                     //func_decl g = function("bvnego", scx.bv_sort(width), scx.bool_sort());
 
@@ -421,7 +421,7 @@ namespace STAUB
                     return ite(BooleanChild(0).ToSMT(width,svariables,sol),IntegerChild(1).ToSMT(width,svariables,sol),IntegerChild(2).ToSMT(width,svariables,sol));
                 case Z3_OP_UMINUS:
                     val = IntegerChild(0).ToSMT(width,svariables,sol);
-                    if (noOverflow)
+                    if (!forSlot)
                     {
                         sol->add(!SMTNode::Z3_bvnego(width)(val));
                         //sol->add(bvneg_no_overflow(val));
@@ -435,7 +435,7 @@ namespace STAUB
                     for (int i = 1; i < contents.num_args(); i++)
                     {
                         temp = IntegerChild(i).ToSMT(width, svariables, sol);
-                        if (noOverflow)
+                        if (!forSlot)
                         {
                             sol->add(!SMTNode::Z3_bvssubo(width)(val, temp));
                             //sol->add(bvsub_no_overflow(val,temp));
@@ -454,7 +454,7 @@ namespace STAUB
                     for (int i = 1; i < contents.num_args(); i++)
                     {
                         temp = IntegerChild(i).ToSMT(width, svariables, sol);
-                        if (noOverflow)
+                        if (!forSlot)
                         {   
                             sol->add(!SMTNode::Z3_bvsaddo(width)(val, temp));    
                             //sol->add(bvadd_no_overflow(val,temp,true));
@@ -473,7 +473,7 @@ namespace STAUB
                     for (int i = 1; i < contents.num_args(); i++)
                     {
                         temp = IntegerChild(i).ToSMT(width, svariables, sol);
-                        if (noOverflow)
+                        if (!forSlot)
                         {
                             sol->add(!SMTNode::Z3_bvsmulo(width)(val, temp));
                             //sol->add(bvmul_no_overflow(val,temp,true));
@@ -491,7 +491,7 @@ namespace STAUB
                     for (int i = 1; i < contents.num_args(); i++)
                     {
                         temp = IntegerChild(i).ToSMT(width, svariables, sol);
-                        if (noOverflow)
+                        if (!forSlot)
                         {
                             sol->add(!SMTNode::Z3_bvsdivo(width)(val, temp));
                             //sol->add(bvsdiv_no_overflow(val,temp));
