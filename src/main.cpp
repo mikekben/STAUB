@@ -2,7 +2,9 @@
 #include <fstream>
 #include <streambuf>
 #include <sstream>
+#include <limits.h>
 #include "STAUBUtil.h"
+
 
 #ifndef PAIR
 #define PAIR std::pair<APInt,unsigned>
@@ -68,6 +70,7 @@ int main(int argc, char *argv[])
     }
 
     bool useInteger;
+    bool clamp = false;
     int useIntegerWidth = 0;
     int useRealEB = 0;
     int useRealSB = 0;
@@ -78,6 +81,11 @@ int main(int argc, char *argv[])
       if(val == "aix")
       {
         useIntegerWidth = -1;
+      }
+      else if (val == "aix2")
+      {
+        useIntegerWidth = -1;
+        clamp = true;
       }
       else
       {
@@ -93,6 +101,12 @@ int main(int argc, char *argv[])
       {
         useRealEB = -1;
         useRealSB = -1;
+      }
+      else if (val == "aix4")
+      {
+        useRealEB = -1;
+        useRealSB = -1;
+        clamp = true;
       }
       else
       {
@@ -141,7 +155,7 @@ int main(int argc, char *argv[])
     if (useInteger)
     {
       stats.push_back("integer");
-      if (useIntegerWidth == -1) //Abstract interpretation case
+      if (useIntegerWidth < 0) //Abstract interpretation case
       {
         //If no constants, assume 1 to model the number of variables
         APInt largest = APMax(APInt(2,1),a.LargestIntegerConstant());
@@ -150,6 +164,18 @@ int main(int argc, char *argv[])
         //Add 1 for signed, add 1 for buffer
         useIntegerWidth = aiResult.ceilLogBase2()+2;
         useIntegerWidth = useIntegerWidth < 3 ? 3 : useIntegerWidth;
+
+        if (clamp)
+        {
+          for (int i = 4; i < INT_MAX/2 ; i *= 2)
+          {
+            if (useIntegerWidth <= i)
+            {
+              useIntegerWidth = i;
+              break;
+            }
+          }
+        }
 
         std::string mst;
         llvm::raw_string_ostream rso(mst);
@@ -168,7 +194,7 @@ int main(int argc, char *argv[])
     else
     {
       stats.push_back("real");
-      if (useRealEB == -1) //Abstract interpretation case
+      if (useRealEB < 0) // Abstract interpretation case
       {
         //If no constants, assume 1 to model the number of variables
         PAIR largest = PairMax({APInt(2,1),1},a.LargestPreciseConstant());
@@ -183,10 +209,30 @@ int main(int argc, char *argv[])
         useRealEB = useRealEB < 2 ? 2 : useRealEB;
         useRealSB = useRealSB < 3 ? 3 : useRealSB;
 
-
-
-        
-        //stats.push_back(toString(largest.first,10,false).c_str());
+        if (clamp)
+        {
+          if (useRealEB + useRealSB <= 16)
+          {
+            useRealEB = 5;
+            useRealSB = 11;
+          }
+          else if (useRealEB + useRealSB <= 32)
+          {
+            useRealEB = 8;
+            useRealSB = 24;
+          }
+          else if (useRealEB + useRealSB <= 64)
+          {
+            useRealEB = 11;
+            useRealSB = 53;
+          }
+          else
+          {
+            useRealEB = 15;
+            useRealSB = 113;
+          }
+        }
+          // stats.push_back(toString(largest.first,10,false).c_str());
 
         std::string mst;
         llvm::raw_string_ostream rso(mst);

@@ -16,7 +16,6 @@ Docker should pull the necessary docker image from Dockerhub with the above comm
 ```
 ./run-sample.sh -int samples/motivating.smt2
 -int
-doing!
 samples/motivating.smt2,integer,855,8551462050,23,
 Running Z3 on unbounded original ...
 sat
@@ -46,7 +45,7 @@ If all three steps listed above execute correctly, then STAUB runs as expected o
 
 ## Step-by-Step Instructions
 
-This step-by-step guide is organized in two parts. The experiments embodied in the submitted paper invove runs of more than 100,000 SMT constraints, which took more than one week of running time on a server with 512 GB memory using 64 cores. Since it would be impractical to re-run the entire set of experiments during artifact evaluation, we provide here a guide for replicating our results on small examples to support the functionality of the submitted artifact source. This demonstrates each of the claims made in the paper on smaller examples. In addition, we provide the raw data generated during our experimental runs, and the analysis script used to generate the tables and graphs in the submitted paper.
+This step-by-step guide is organized in two parts. The experiments embodied in the submitted paper involve runs of more than 100,000 SMT constraints, which took more than one week of running time on a server with 512 GB memory using 64 cores. Since it would be impractical to re-run the entire set of experiments during artifact evaluation, we provide here a guide for replicating our results on small examples to support the functionality of the submitted artifact source. This demonstrates each of the claims made in the paper on smaller examples. In addition, we provide the raw data generated during our experimental runs, and the analysis script used to generate the tables and graphs in the submitted paper.
 
 The source code of STAUB is provided in ``src``, including a makefile to build the binary (we provide a pre-built binary in the docker container as well). The source code is C++, using the Z3 API to parse and write SMT constraints. We use LLVM's APInt and APFloat libraries during abstract interpretation, thus the docker container includes a custom build of LLVM to support these libraries, and SLOT. STAUB's source code includes comments and clear naming conventions to facilitate modification, reuse, and adaptation in future research.
 

@@ -19,13 +19,13 @@ sed -i '/declare-fun bvnego/d;/declare-fun bvsaddo/d;/declare-fun bvssubo/d;/dec
 #Run Z3 on the original constraint
 echo "Running Z3 on unbounded original ..."
 #echo "   [expected output: sat, after several seconds]"
-z3/build/z3 -T:10 -st $FILE | grep -E "^sat$|unsat|unknown|total-time"
+z3/build/z3 -T:60 -st $FILE | grep -E "^sat$|unsat|unknown|total-time"
 
 
 #Run Z3 on the final constraint
 echo "Running Z3 on transformed bounded constraint ..."
 #echo "   [expected output: sat, faster than the unbounded form]"
-z3/build/z3 -T:10 -st $BOUNDED_FILE | grep -E "^sat$|unsat|unknown|total-time"
+z3/build/z3 -T:60 -st $BOUNDED_FILE | grep -E "^sat$|unsat|unknown|total-time"
 
 #Run STAUB with SLOT
 echo "Running SLOT on bounded constraint ..."
@@ -40,6 +40,6 @@ rm $FILE-temp.smt2
 
 echo "Running Z3 on bounded constraint after SLOT application ..."
 #echo "   [expected output: sat, with no change in running time]"
-z3/build/z3 -T:10 -st $SLOT_FILE | grep -E "^sat$|unsat|unknown|total-time"
+z3/build/z3 -T:60 -st $SLOT_FILE | grep -E "^sat$|unsat|unknown|total-time"
 
 
