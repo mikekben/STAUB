@@ -38,6 +38,7 @@ COPY run-sample.sh ./run-sample.sh
 COPY samples ./samples
 COPY data ./data
 WORKDIR /root/src
+RUN make clean
 RUN make
 RUN cp main ../staub
 WORKDIR /root
